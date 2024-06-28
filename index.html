@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>T2 - SISOP</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="parameters">
+      <h1>T2 - SISOP</h1>
+      <p>Alunos: Eduardo Garcia, Henrique, Rafael</p>
+      <br /><br />
+      <div>
+        <label for="input_vm">Tamanho da memoria virtual (em bits)</label>
+        <input type="text" id="input_vm" />
+      </div>
+      <br />
+      <div>
+        <label for="input_fm">Tamanho da memoria física (em bits)</label>
+        <input type="text" id="input_fm" />
+      </div>
+      <br />
+      <div>
+        <label for="input_pg">Tamanho da página (em bits)</label>
+        <input type="text" id="input_pg" />
+      </div>
+      <br /><br />
+      <button id="rodar">rodar</button>
+    </section>
+    <section id="memory">
+      <div class="container">
+        <div class="vm_wrapper">
+          <p>Virtual memory</p>
+          <br />
+          <div id="vm"></div>
+        </div>
+        <div class="fm_wrapper">
+          <p>Physical memory</p>
+          <br />
+          <div id="fm"></div>
+        </div>
+      </div>
+    </section>
+    <script>
+      //   Containers das memórias para inserir as páginas/molduras
+      const vm_front = document.getElementById("vm");
+      const fm_front = document.getElementById("fm");
+
+      const input_vm = document.getElementById("input_vm");
+      const input_fm = document.getElementById("input_fm");
+      const input_pg = document.getElementById("input_pg");
+
+      const btn_run = document.getElementById("rodar");
+      btn_run.addEventListener("click", run);
+
+      //   let bytes_VM = 16; // GERA 64K
+      //   let bytes_FM = 15; // GERA 32K
+      //   let bytes_PAGES = 12; // GERA 4K
+
+      //   let VM_sizes_KB = Math.pow(2, bytes_VM) / 1024;
+      //   let FM_sizes_KB = Math.pow(2, bytes_FM) / 1024;
+      //   let PAGES_sizes_KB = Math.pow(2, bytes_PAGES) / 1024;
+
+      //   let VM_pages_qtd = VM_sizes_KB / PAGES_sizes_KB;
+      //   let FM_pages_qtd = FM_sizes_KB / PAGES_sizes_KB;
+
+      let bytes_VM = 0;
+      let bytes_FM = 0;
+      let bytes_PAGES = 0;
+
+      let VM_sizes_KB = 0;
+      let FM_sizes_KB = 0;
+      let PAGES_sizes_KB = 0;
+
+      let VM_pages_qtd = 0;
+      let FM_pages_qtd = 0;
+
+      let VM = [];
+      let FM = [];
+
+      //   Função para rodar
+      function run() {
+        bytes_VM = parseInt(input_vm.value);
+        bytes_FM = parseInt(input_fm.value);
+        bytes_PAGES = parseInt(input_pg.value);
+
+        VM_sizes_KB = Math.pow(2, bytes_VM) / 1024;
+        FM_sizes_KB = Math.pow(2, bytes_FM) / 1024;
+        PAGES_sizes_KB = Math.pow(2, bytes_PAGES) / 1024;
+
+        VM_pages_qtd = VM_sizes_KB / PAGES_sizes_KB;
+        FM_pages_qtd = FM_sizes_KB / PAGES_sizes_KB;
+
+        console.log("VM_sizes_KB", VM_sizes_KB);
+        console.log("FM_sizes_KB", FM_sizes_KB);
+        console.log("pages_sizes_KB", PAGES_sizes_KB);
+
+        console.log("VM_pages_qtd", VM_pages_qtd);
+        console.log("FM_pages_qtd", FM_pages_qtd);
+
+        // Esse código basicamente cria a quantidade certa de páginas por tags
+        // div, faz uma customização com css pra adicionar as legendas e por
+        // fim insere no html (NÃO MEXA, ESTÁ FUNCIONANDO DE BOAS)
+        let index_page_aux = 0;
+        for (let i = 0; i < VM_pages_qtd; i++) {
+          let page = document.createElement("div");
+          page.classList.add("page");
+
+          page.setAttribute(
+            "data-page",
+            `${index_page_aux} - ${index_page_aux + PAGES_sizes_KB}`
+          );
+
+          index_page_aux += PAGES_sizes_KB;
+          vm_front.appendChild(page);
+        }
+
+        // Mesma coisa do codigo acima porém, para criar os frames da memória física
+        let index_frame_aux = 0;
+        for (let i = 0; i < FM_pages_qtd; i++) {
+          let page = document.createElement("div");
+          page.classList.add("frame");
+
+          page.setAttribute(
+            "data-page",
+            `${index_frame_aux} - ${index_frame_aux + PAGES_sizes_KB}`
+          );
+
+          index_frame_aux += PAGES_sizes_KB;
+          fm_front.appendChild(page);
+        }
+
+        // Uma vez com as páginas e molduras criadas, agora temos que fazer o
+        // mapeamento de cada página com sua moldura correspondente
+
+        // Detalhe, ainda não temos os endereços, ent temos que criar um gerador de endereços
+      }
+    </script>
+  </body>
+</html>
